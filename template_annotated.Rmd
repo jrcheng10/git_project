@@ -1,0 +1,100 @@
+---
+title: "Simple document"
+# output: word_document
+# output: pdf_document 
+  # note: NEED LaTeX to create PDF
+  # will save pdf to directory, will only save current version
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r, echo = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+
+I'm an R Markdown document! 
+
+# Section 1
+
+Here's a **code chunk** that samples from 
+a _normal distribution_:
+
+```{r}
+# JG: avoid placing comments in r code chunks, can do it
+samp = rnorm(100)
+length(samp)
+```
+
+# Section 2
+
+I can take the mean of the sample, too!
+The mean is `r round(mean(samp), 2)`. 
+
+```{r}
+# note to self: above is an example of inline R code
+```
+
+# Section 3
+
+This is going to make a plot. First generate dataeframe, the use ggplot to make scatterplot.
+
+```{r chunk_scatterplot, echo = FALSE}
+# option + command + i to create code chunk
+# if tried to run library(tidyverse) in console, cna still run code chunk, but cannot knit;
+# kitting = effectively creating new R session every time (like opening RStudio again)
+# surround text with backticks to format as code
+
+# can use R for equation editing (i.e. via LaTeX markdown language)
+
+# see: Code chunks and snippets section on course website: https://p8105.com/writing_with_data.html#Code_chunks_and_snippets
+
+# for purposes of submitting HW, should show code
+# eval = FALSE: code will be displayed but not executed; results are not included.
+# echo = FALSE: code will be executed but not displayed; results are included.
+# message = FALSE and warning = FALSE: prevents messages and warnings from being displayed.
+
+# note: if naming code chunks, RMarkdown will track this; chunk naming is useful if many chunks
+#       cannot repeat chunk names
+
+# avoid using <!-- ... --> for commenting out large blocks of code; just have text in report
+
+# tibbles > dataframe; tibble is the most modern version
+# other data structures: data tables
+
+# create plots
+plot_df = tibble(
+  x = rnorm(n = 1000), # standard normal curve
+  y = 1 + 2 * (x ^ 5) + rnorm(n = 1000)
+)
+
+ggplot(plot_df, aes(x = x)) + geom_histogram()
+
+# run scatterplot
+ggp = ggplot(plot_df, aes(x = x, y = y)) + geom_point()
+
+ggsave("scatterplot.pdf", plot = ggp, height = 4, width = 6)
+```
+
+
+```{r learning_assessment}
+
+# Learning assessment: Write a named code chunk that creates a dataframe comprised of: a numeric variable containing a random sample of size 500 from a normal variable with mean 1; a logical vector indicating whether each sampled value is greater than zero; and a numeric vector containing the absolute value of each element. Then, produce a histogram of the absolute value variable just created. Add an inline summary giving the median value rounded to two decimal places. What happens if you set eval = FALSE to the code chunk? What about echo = FALSE?
+
+# solution
+
+a = tibble(
+  norm = rnorm(n = 500, mean = 1), # standard normal curve
+  logical = norm > 0,
+  abs_norm = abs(norm)
+)
+
+ggplot(a, aes(x = abs_norm)) + geom_histogram()
+
+# for class, can google, work with TAs, work with classmates
+# YAML = yet another markdown language; output argument is most important
+
+```
+
